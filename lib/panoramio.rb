@@ -39,7 +39,7 @@ class Panoramio
   end
 
   remote_defaults :on_success => lambda {|response| JSON.parse(response.body)},
-                  :on_failure => lambda {|response| raise "Error: #{response.code}. Body #{response.body}"},
+                  :on_failure => lambda {|response| raise "Panoramio.com error: #{response.code}. Response #{response.body}"},
                   :cache_responses => 180
   define_remote_method :get_photos, :base_uri => URL
   
