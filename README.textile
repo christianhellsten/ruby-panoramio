@@ -1,0 +1,71 @@
+h1. Ruby Panoramio
+
+h2. Introduction
+
+The Ruby Panoramio gem is a small library that makes it easy to add photos from "Panoramio.com":http://www.panoramio.com/ to your site.
+
+With the Ruby Panoramio you can do the following:
+* Generate valid Panoramio API URLs easily
+* Retrieve Panoramio photos in one call
+
+Remember to read the "Panoramio API - Terms of Use":http://www.panoramio.com/api_terms/ before using their API.
+
+h2. Installation
+
+<pre>
+  <code>
+    $ gem sources -a http://gems.github.com (you only have to do this once)
+    $ sudo gem install christianhellsten-ruby-panoramio
+  </code>
+</pre>
+
+h3. Usage
+
+
+<pre>
+  <code>
+  require 'rubygems'
+  require 'panoramio'
+  </code>
+</pre>
+
+h4. Generate a Panoramio API URL
+
+<pre>
+  <code>
+  url = Panoramio.url(:minx => 60, 
+                      :maxx => 70, 
+                      :miny => 10, 
+                      :maxy => 20)
+
+  => "http://www.panoramio.com/map/get_panoramas.php?order=popularity&maxx=70&miny=10&set=public&maxy=20&from=0&size=thumbnail&to=20&minx=60"  
+  </code>
+</pre>
+
+h4. Retrieve Panoramio photos
+
+<pre>
+  <code>
+  photos = Panoramio.photos(:minx => 60, 
+                            :maxx => 70, 
+                            :miny => 10, 
+                            :maxy => 20)
+
+  photo = photos.first
+
+  photo.photo_title
+  photo.latitude
+  photo.longitude
+  </code>
+</pre>
+
+h2. Todo
+
+* Rename min and max parameters to xyz
+* Validate parameters
+* Rename url method to photos_url?
+* JavaScript widget?
+
+h2. Author
+
+"Christian Hellsten":http://christianhellsten.com ("Aktagon Ltd.":http://aktagon.com)
