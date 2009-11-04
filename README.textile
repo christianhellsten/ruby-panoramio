@@ -12,10 +12,11 @@ Remember to read the "Panoramio API - Terms of Use":http://www.panoramio.com/api
 
 h2. Installation
 
+Via gemcutter.com:
+
 <pre>
   <code>
-    $ gem sources -a http://gems.github.com (you only have to do this once)
-    $ sudo gem install christianhellsten-ruby-panoramio
+  $ sudo gem install panoramio
   </code>
 </pre>
 

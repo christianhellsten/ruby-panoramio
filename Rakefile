@@ -8,7 +8,7 @@ begin
     gem.summary = %Q{Simple Panoramio API client written in Ruby}
     gem.description = %Q{Simple Panoramio API client written in Ruby}
     gem.email = "christian.hellsten@gmail.com"
-    gem.homepage = "http://github.com/christian.hellsten/ruby-panoramio"
+    gem.homepage = "http://github.com/christianhellsten/ruby-panoramio"
     gem.authors = ["Christian Hellsten"]
     gem.add_dependency "pauldix-typhoeus"
     gem.add_dependency "json"
