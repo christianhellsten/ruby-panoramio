@@ -30,7 +30,15 @@ require 'json'
 #        :miny => -90,
 #        :maxy => 90#,
 #   )
-
+#
+#   Panoramio.photos_adv(
+#       :miny => 49.492059,
+#       :maxy => 49.64658,
+#       :minx => 19.998493,
+#       :maxx => 20.373058,
+#       :part_size => 0.1,
+#       :set => :full
+#   )
 
 class Panoramio
   include Typhoeus
@@ -38,7 +46,7 @@ class Panoramio
   URL = 'http://www.panoramio.com/map/get_panoramas.php'
 
   class << self
-    def url(options = {})
+    def url(options = { })
       "#{URL}?#{to_uri(options)}"
     end
 
@@ -46,17 +54,90 @@ class Panoramio
     #
     # :call-seq:
     #   Panoramio.photos( Hash options ) = > Array of photos
-    def photos(options = {})
+    def photos(options = { })
       to_photos(get_photos(:params => to_params(options)))
+    end
+
+    # Get all photos from Panoramio within area
+    #
+    # :call-seq:
+    #   Panoramio.photos_all( Hash options ) = > Array of photos
+    def photos_all(options = { })
+      output = Array.new
+
+      i = 0
+      loop do
+        opts = options.clone.merge(
+          {
+            :from => i,
+            :to => i+100
+          }
+        )
+        new_photos = photos(opts)
+        output += new_photos
+        i += 100
+
+        if new_photos.size == 0
+          return output
+        end
+      end
+    end
+
+    # Get even more photos from Panoramio. Divide area using :part_size in options.
+    #
+    # :call-seq:
+    #   Panoramio.photos_adv( Hash options ) = > Hash with photos and calculated data
+    def photos_adv(options = { })
+      # not enough data
+      return [] if options[:minx].nil? or options[:maxx].nil? or options[:miny].nil? or options[:maxy].nil?
+      # old wat
+      return photos(options) if options[:part_size].nil?
+
+      # start creating parts
+      x_length = options[:maxx] - options[:minx]
+      y_length = options[:maxy] - options[:miny]
+
+      # new partials count
+      x_partial_count = (x_length / options[:part_size]).ceil
+      y_partial_count = (y_length / options[:part_size]).ceil
+
+      x_precised_part_size = x_length / x_partial_count.to_f
+      y_precised_part_size = y_length / y_partial_count.to_f
+
+      output = []
+      (0...(x_partial_count)).each do |x|
+        (0...(y_partial_count)).each do |y|
+          h = options.clone.merge(
+            {
+              :minx => options[:minx] + x * x_precised_part_size,
+              :maxx => options[:minx] + (1 + x) * x_precised_part_size,
+              :miny => options[:miny] + y * y_precised_part_size,
+              :maxy => options[:miny] + (1 + y) * y_precised_part_size,
+            }
+          )
+
+          output += photos_all(h)
+        end
+      end
+
+      output.uniq!
+      return {
+        :array => output,
+        :array_size => output.size,
+        :x_parts => x_partial_count,
+        :x_precised_part_size => x_precised_part_size,
+        :y_parts => y_partial_count,
+        :y_precised_part_size => y_precised_part_size
+      }
     end
 
     protected
     def to_params(options)
-      {:order => :popularity,
-       :set => :public,
-       :size => :thumbnail,
-       :from => 0,
-       :to => 20}.merge(options)
+      { :order => :popularity,
+        :set => :public,
+        :size => :thumbnail,
+        :from => 0,
+        :to => 20 }.merge(options)
     end
 
     def to_uri(options)
@@ -69,7 +150,13 @@ class Panoramio
         return Array.new
       end
 
-      struct = Struct.new('Photo', *json['photos'].first.keys)
+      # issues with redefinition
+      if defined? Struct::Photo
+        struct = Struct::Photo
+      else
+        struct = Struct.new('Photo', *json['photos'].first.keys)
+      end
+
       json['photos'].map { |p| struct.new(*p.values) }
     end
   end
