@@ -145,10 +145,8 @@ class Panoramio
     end
 
     def to_photos(json)
-      # fix for 'no photos''
-      if json['photos'].first.nil?
-        return Array.new
-      end
+      # fix for 'no photos'
+      return [] if json['photos'].first.nil?
 
       # issues with redefinition
       if defined? Struct::Photo
