@@ -74,14 +74,16 @@ class Panoramio
       end
     end
 
+    # TODO document
+    #
     # Get even more photos from Panoramio. Divide area using :part_size in options.
     #
     # :call-seq:
     #   Panoramio.photos_adv( Hash options ) = > Hash with photos and calculated data
     def photos_adv(options = {})
       # not enough data
-      return [] if options[:minx].nil? or options[:maxx].nil? or options[:miny].nil? or options[:maxy].nil?
-      return photos(options) if options[:part_size].nil?
+      return nil unless options[:minx] || options[:maxx] || options[:miny] || options[:maxy]
+      return photos(options) unless options[:part_size]
 
       # start creating parts
       x_length = options[:maxx] - options[:minx]
@@ -97,14 +99,12 @@ class Panoramio
       output = []
       (0...(x_partial_count)).each do |x|
         (0...(y_partial_count)).each do |y|
-          h = options.clone.merge(
-            {
-              :minx => options[:minx] + x * x_precised_part_size,
-              :maxx => options[:minx] + (1 + x) * x_precised_part_size,
-              :miny => options[:miny] + y * y_precised_part_size,
-              :maxy => options[:miny] + (1 + y) * y_precised_part_size,
-            }
-          )
+          h = options.clone.merge({
+            :minx => options[:minx] + x * x_precised_part_size,
+            :maxx => options[:minx] + (1 + x) * x_precised_part_size,
+            :miny => options[:miny] + y * y_precised_part_size,
+            :maxy => options[:miny] + (1 + y) * y_precised_part_size,
+          })
           output += photos_all(h)
         end
       end
@@ -133,7 +133,6 @@ class Panoramio
       end
 
       def to_photos(json)
-        # fix for 'no photos'
         return nil if json['photos'].first.nil?
         # issues with redefinition
         struct = defined?(Struct::Photo) ? Struct::Photo : Struct.new('Photo', *json['photos'].first.keys)
