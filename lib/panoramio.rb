@@ -65,7 +65,6 @@ class Panoramio
       output = []
       i = 0
       loop do
-        puts i
         opts = options.clone.merge({ :from => i, :to => i + 100 })
         new_photos = photos(opts)
         return output if new_photos.nil? || !new_photos.size
