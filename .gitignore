@@ -1,4 +1,6 @@
 *.sw?
+.bundle
+vendor
 .DS_Store
 coverage
 tmp/*

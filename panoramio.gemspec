@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.authors = ["Christian Hellsten"]
   s.date = %q{2009-10-03}
   s.description = %q{Simple Panoramio API client written in Ruby}
-  s.email = %q{christian.hellsten@gmail.com}
+  s.email = %q{christian@aktagon.com}
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"

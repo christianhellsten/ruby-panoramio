@@ -7,7 +7,7 @@ begin
     gem.name = "panoramio"
     gem.summary = %Q{Simple Panoramio API client written in Ruby}
     gem.description = %Q{Simple Panoramio API client written in Ruby}
-    gem.email = "christian.hellsten@gmail.com"
+    gem.email = "christian@aktagon.com"
     gem.homepage = "http://github.com/christianhellsten/ruby-panoramio"
     gem.authors = ["Christian Hellsten"]
     gem.add_dependency "pauldix-typhoeus"
@@ -44,16 +44,17 @@ task :test => :check_dependencies
 
 task :default => :test
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
-  if File.exist?('VERSION')
-    version = File.read('VERSION')
-  else
-    version = ""
-  end
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "panoramio #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
-end
+#require 'rake/rdoctask'
+#require 'rdoc/task'
+#Rake::RDocTask.new do |rdoc|
+#  if File.exist?('VERSION')
+#    version = File.read('VERSION')
+#  else
+#    version = ""
+#  end
+#
+#  rdoc.rdoc_dir = 'rdoc'
+#  rdoc.title = "panoramio #{version}"
+#  rdoc.rdoc_files.include('README*')
+#  rdoc.rdoc_files.include('lib/**/*.rb')
+#end
